@@ -1,0 +1,39 @@
+{% extends "HomeManager/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <body>
+        <div class="text-center">
+            <img class="img-fluid rounded"
+            src="{% static "HomeManager/media/indexH1.png" %}" alt="Photo de noel"> 
+        </div>
+        <h2>Liste des tâches</h2>
+        {% if taches %}
+        <div class="accordion" id="accordionExample">
+            {% for tache in taches %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{tache.id}}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{tache.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
+                        {{ tache }}
+                    </button>
+                </h2>
+                <div id="collapse{{tache.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{tache.id}}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Date limite :  {{tache.jalon_date|date:"Y-m-d"}}</strong> <br/>
+                        <pre>{{ tache.commentaire_text }}</pre>
+                        <br/>
+                                <input type="button" value="Terminer tache" class="btn btn-secondary"
+        onclick="location.href='{% url 'HomeManager:finishTask' tache.id %}'">
+                                        <input type="button" value="Modifier tache" class="btn btn-primary"
+        onclick="location.href='{% url 'HomeManager:detail' tache.id %}'">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucune tâche en cours ! Bravo champion &#128540;</p>
+        {% endif %}
+        </div>
+    </body>
+</div>
+{% endblock %}

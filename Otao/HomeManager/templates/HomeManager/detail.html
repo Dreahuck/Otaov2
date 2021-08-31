@@ -1,0 +1,68 @@
+{% extends "HomeManager/base.html" %}
+{% block content %}
+{% load static %}
+<h1>Détail de la tâche</h1>
+<div class="container">
+	{% if tache%}
+		<form action="{% url 'HomeManager:updatedTask' tache.id %}"
+		method="post">
+	{% else %}
+		<form action="{% url 'HomeManager:createdTask'%}" method="post">
+	{% endif %}
+		{% csrf_token %}
+		{% if error_message %}<p><strong>{{ error_message }}</strong></p>
+		{% endif %}
+		<div class="form-group row">
+			<label for="titreTache"
+			class="col-sm-2 col-form-label">Titre</label>
+			<input name="titreTache" type="text" class="form-control"
+			aria-label="Inserer un titre" aria-describedby="basic-addon1"
+			{% if tache %} placeholder="{{tache.tache_text}}" disabled {% endif %} >
+		</div>
+
+		<div class="form-group row">
+			<label for="commentaireTache" class="col-sm-2 col-form-label">Commentaire</label>
+			<textarea class="form-control"
+			name="commentaireTache" rows="5">{{tache.commentaire_text}}</textarea>
+		</div>
+
+		<div class=form-group row">
+			<label for="selPriseEnCharge"
+			class="col-sm-2 col-form-label">Personne en charge</label>
+			<select name="selPriseEnCharge" class="form-control">
+				<option value="-1">Non défini</option>
+				<option value="0">Tout le monde</option>
+				{% if personnes %}
+				{% for pers in personnes %}
+				<option value="{{pers.id}}"
+				{% if tache and tache.priseEnChargePar_id == pers.id %} selected {% endif %}>{{pers}}</option>
+				{% endfor %}
+				{% endif %}
+			</select>
+		</div>	
+		{% if tache %}
+		<div class=form-group row">
+			<label for="selEtat" class="col-sm-2 col-form-label">Etat</label>
+			<select name="selEtat" class="form-control">
+				<option value="EC"
+				{% if tache.etat_text == "EC" %} selected {%endif %}>
+				En cours</option>
+				<option value="EA"
+				{% if tache.etat_text == "EA" %} selected {%endif %}>
+				En attente</option>
+								<option value="RE"
+				{% if tache.etat_text == "RE" %} selected {%endif %}>
+				Réalisée</option>
+								<option value="AB"
+				{% if tache.etat_text == "AB" %} selected {%endif %}>
+				Abandonée</option>
+			</select>
+		</div>	
+		{% endif %}
+		</br>
+		<input type="button" value="Retour" class="btn btn-secondary"
+		onclick="location.href='{% url 'HomeManager:index' %}'">
+		<input type="submit" value="Enregistrer" class="btn btn-primary">
+	</form>
+</div>
+{% endblock %}
