@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 <h1>Détail de la tâche</h1>
-<div class="container">
+<div class="container" style="max-width: 70%;">
 	{% if tache%}
 		<form action="{% url 'HomeManager:updatedTask' tache.id %}"
 		method="post">
@@ -26,9 +26,9 @@
 			name="commentaireTache" rows="5">{{tache.commentaire_text}}</textarea>
 		</div>
 
-		<div class=form-group row">
+		<div class="form-group row">
 			<label for="selPriseEnCharge"
-			class="col-sm-2 col-form-label">Personne en charge</label>
+			class="col-sm-2 col-form-label">En charge</label>
 			<select name="selPriseEnCharge" class="form-control">
 				<option value="-1">Non défini</option>
 				<option value="0">Tout le monde</option>

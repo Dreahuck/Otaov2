@@ -4,6 +4,23 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login as auth_login
+
+def authorizedUser(request):
+	if request.method == 'POST':
+		password = request.POST['mdp']
+		username = request.POST['username']
+		user = authenticate(username=username, password=password)
+		if user:
+			if user.is_active:
+				auth_login(request, user)
+				return HttpResponseRedirect(reverse('HomeManager:index'))
+		else:
+			return render(request, 'HomeManager/connexion.html', {
+            	'error_message_login': "Connexion refusé."
+        	})
+
 
 def index(request):
 	taches = Tache.objects.filter(Q(etat_text = 'EC') | Q(etat_text = 'EA'))\
@@ -21,9 +38,47 @@ def detail(request, tache_id):
 	return render(request, 'HomeManager/detail.html', {'tache': tache,
 		'personnes': personnes})
 
-def results(request, question_id):
-	response = "You're looking at the results of question %s."
-	return HttpResponse(response % question_id)
+def inscription(request):
+	return render(request, 'HomeManager/inscription.html')
+
+def connexion(request):
+	return render(request, 'HomeManager/connexion.html')
+
+def createdUser(request):
+	if not request.POST['mdp'] == request.POST['confirmMdp']:
+		return render(request, 'HomeManager/inscription.html', {
+            'error_message_mdp': "Les mots de passe ne sont pas les mêmes."
+        })
+	if request.POST['mdp'] == "":
+		return render(request, 'HomeManager/inscription.html', {
+            'error_message_mdp': "Mot de passe manquant"
+        })
+	existing_user_by_mail = User.objects.filter(email=request.POST['email'])
+	if existing_user_by_mail.count() > 0:
+		return render(request, 'HomeManager/inscription.html', {
+            'error_message_mailExist': "Cet email est déjà utilisé."
+        })
+	existing_user_by_username = User.objects.filter(username=request.POST['username'])
+	if existing_user_by_username.count() > 0:
+		return render(request, 'HomeManager/inscription.html', {
+            'error_message_userExist': "Ce pseudo est déjà utilisé."
+        })
+	user = User.objects.create_user(request.POST['username'],
+    	request.POST['email'], request.POST['mdp'], first_name=request.POST['nom'],
+    	last_name=request.POST['prenom'])
+	'''user.save()'''
+	personne = Personne(username_text=request.POST['username'],
+    	adresseMail_text=request.POST['email'],
+    	prenom_text=request.POST['prenom'],
+    	nom_text=request.POST['nom']
+    	)
+	personne.save()
+	user = authenticate(username=request.POST['username'], password=request.POST['mdp'])
+	if user:
+		if user.is_active:
+			auth_login(request, user)
+			return HttpResponseRedirect(reverse('HomeManager:index'))
+	HttpResponseRedirect(reverse('HomeManager:index'))
 
 def updatedTask(request, tache_id):
 	tache = get_object_or_404(Tache, pk=tache_id)
@@ -34,13 +89,17 @@ def updatedTask(request, tache_id):
 	return HttpResponseRedirect(reverse('HomeManager:index'))
 
 def createdTask(request):
+	idUserConnecte = 0
+	userConnected = Personne.objects.filter(username_text=request.user.username)
+	if userConnected.count() > 0:
+		idUserConnecte = userConnected[0].id
 	tache = Tache(
 		tache_text = request.POST.get('titreTache','Aucun titre'),
 		commentaire_text = request.POST.get('commentaireTache', ''),
 		priseEnChargePar_id = request.POST.get('selPriseEnCharge',0),
 		etat_text = 'EC',
 		creation_date = timezone.now(),
-		creerPar_id = 0)
+		creerPar_id = idUserConnecte)
 	tache.save()
 	return HttpResponseRedirect(reverse('HomeManager:index'))
 

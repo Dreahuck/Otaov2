@@ -1,0 +1,71 @@
+<!doctype html>
+	<html lang="fr">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Inscription sur Otao</title>
+
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+	</head>
+	<body>
+		<div class="container">
+			<br>  <p class="text-center">Inscription</p>
+			<hr>
+
+			<div class="card bg-light">
+				<article class="card-body mx-auto" style="max-width: 400px;">
+					<h4 class="card-title mt-3 text-center">Creer un compte</h4>
+					<p class="divider-text">
+					</p>
+					<form action="{% url 'HomeManager:createdUser'%}" method="post">
+						{% csrf_token %}
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+							</div>
+							<input name="username" class="form-control" placeholder="Pseudo" type="text">
+						</div>
+						{% if error_message_userExist %}<p class="text-danger"><strong>{{ error_message_userExist }}</strong></p>{% endif %}  
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+							</div>
+							<input name="nom" class="form-control" placeholder="Nom" type="text">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+							</div>
+							<input name="prenom" class="form-control" placeholder="Prénom" type="text">
+						</div> <!-- form-group// -->
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+							</div>
+							<input name="email" class="form-control" placeholder="Adresse mail" type="email">
+						</div>
+												{% if error_message_email %}<p class="text-danger"><strong>{{ error_message_email }}</strong></p>{% endif %}  
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+							</div>
+							<input name="mdp" class="form-control" placeholder="Mot de passe" type="password">
+						</div> <!-- form-group// -->
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+							</div>
+							<input name="confirmMdp" class="form-control" placeholder="Confirmation mot de passe" type="password">
+						</div> 
+						{% if error_message_mdp %}<p class="text-danger"><strong>{{ error_message_mdp }}</strong></p>{% endif %}                                  
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary btn-block"> Créer un compte  </button>
+						</div> <!-- form-group// -->      
+						<p class="text-center">Déjà un compte ? <a href="{% url 'HomeManager:connexion' %}">Connexion</a> </p>                                                                 
+					</form>
+				</article>
+			</div> <!-- card.// -->
+
+		</div>
+		</body>
+		</html>

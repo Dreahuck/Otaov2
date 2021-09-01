@@ -1,0 +1,47 @@
+<!doctype html>
+	<html lang="fr">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Inscription sur Otao</title>
+
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+	</head>
+	<body>
+		<div class="container">
+			<br>  <p class="text-center">Connexion</p>
+			<hr>
+			<div class="card bg-light">
+				<article class="card-body mx-auto" style="max-width: 400px;">
+					<h4 class="card-title mt-3 text-center">Connexion</h4>
+					<p class="divider-text">
+					</p>
+					<form action="{% url 'HomeManager:authorizedUser'%}" method="post">
+						{% csrf_token %}
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+							</div>
+							<input name="username" class="form-control" placeholder="Pseudo" type="text">
+						</div> 
+						<div class="form-group input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+							</div>
+							<input name="mdp" class="form-control" placeholder="Mot de passe" type="password">
+						</div>
+					</div> 
+						{% if error_message_login %}<p class="text-danger"><strong>{{ error_message_login }}</strong></p>{% endif %}                              
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-block"> Se connecter  </button>
+					</div>
+						<p class="text-center">Nouveau ? <a href="{% url 'HomeManager:inscription' %}">Creer un compte</a> </p>                  
+				</form>
+			</article>
+		</div> <!-- card.// -->
+
+	</div>
+</body>
+</html>

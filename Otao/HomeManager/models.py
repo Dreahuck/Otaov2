@@ -5,7 +5,7 @@ class Personne(models.Model):
     prenom_text = models.CharField(max_length=32)
     nom_text = models.CharField(max_length=32)
     estActif_bool = models.BooleanField(default=True)
-    metier_text = models.CharField(max_length=50)
+    metier_text = models.CharField(max_length=50, default= "Non renseigné")
     pourcentageAttribution_int = models.IntegerField(default=100)
     adresseMail_text = models.CharField(max_length=100, default=" ")
     creation_date = models.DateTimeField(default=timezone.now)
