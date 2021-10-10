@@ -3,25 +3,28 @@
 {% load static %}
 <div class="container">
     <body>
+        <h2>Bienvenue {{user}} </h2> 
         <div class="text-center">
-            <img class="img-fluid rounded"
-            src="{% static "HomeManager/media/indexH1.png" %}" alt="Photo de noel"> 
+            <!--<img class="img-fluid rounded"
+            src="{% static "HomeManager/media/indexH1.png" %}" alt="Photo de noel">  -->
+<iframe id="widget_autocomplete_preview" frameborder="0" src="https://meteofrance.com/widget/prevision/622740"> </iframe>
+    </div>
         </div>
-        <h1>Bienvenue {{user}} </h1> 
-        <h2>Liste des tâches</h2>
+        <h3>Liste des tâches</h3>
         {% if taches %}
         <div class="accordion" id="accordionExample">
             {% for tache in taches %}
-            <div class="accordion-item">
+            <div class="accordion-item background">
                 <h2 class="accordion-header" id="heading{{tache.id}}">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{tache.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
-                        {{ tache }}
+                        {{ tache.strTache }}
                     </button>
                 </h2>
                 <div id="collapse{{tache.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{tache.id}}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>Date limite :  {{tache.jalon_date|date:"Y-m-d"}}</strong> <br/>
-                        <pre>{{ tache.commentaire_text }}</pre>
+                        <strong>Date limite :  {{tache.dateJalon|date:"d-m-Y"}}</strong> <br/>
+                        <strong>Créée par : {{ tache.creerPar_text }}</strong>
+                        <pre>{{ tache.commentaire }}</pre>
                         <br/>
                                 <input type="button" value="Terminer tache" class="btn btn-secondary"
         onclick="location.href='{% url 'HomeManager:finishTask' tache.id %}'">

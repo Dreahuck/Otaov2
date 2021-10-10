@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+
 class Personne(models.Model):
     username_text = models.CharField(max_length=32, default=" ")
     prenom_text = models.CharField(max_length=32)
@@ -24,7 +25,7 @@ class ParametrageTache(models.Model):
 class Tache(models.Model):
     tache_text = models.CharField(max_length=120)
     creation_date = models.DateTimeField('Date de création')
-    jalon_date = models.DateTimeField('Date Jalon de réalisation',null=True)
+    jalon_date = models.DateTimeField('Date Jalon de réalisation',default=timezone.datetime.max)
     commentaire_text = models.CharField(max_length=6000)
     priseEnChargePar_id = models.IntegerField(default=-1)
     creerPar_id =models.IntegerField(default=0)
@@ -38,4 +39,10 @@ class Tache(models.Model):
                 return f'{self.tache_text} (Pour : {personne.nom_text} {personne.prenom_text})'
         return self.tache_text
 
+    def getCreerPar(self):
+        if self.creerPar_id > 0:
+            personne = Personne.objects.get(pk=self.creerPar_id)
+            if personne:
+                return f'{personne.nom_text} {personne.prenom_text}'
+        return "Non renseigné"
 

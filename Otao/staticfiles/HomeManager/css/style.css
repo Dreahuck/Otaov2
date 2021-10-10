@@ -1,0 +1,19 @@
+.background {
+background: rgb(200,54,73);
+background: linear-gradient(90deg, rgba(200,54,73,1) 0%, rgba(79,138,207,1) 100%);
+}
+
+*{
+	margin:0;
+
+	padding:0;
+}
+
+body, html{
+	height:100%;
+}
+
+body{
+background: rgb(200,54,73);
+background: linear-gradient(90deg, rgba(200,54,73,1) 0%, rgba(79,138,207,1) 100%);
+}

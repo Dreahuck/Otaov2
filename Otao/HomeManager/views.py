@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
+from datetime import datetime
 
 def authorizedUser(request):
 	if request.method == 'POST':
@@ -24,9 +25,20 @@ def authorizedUser(request):
 
 def index(request):
 	taches = Tache.objects.filter(Q(etat_text = 'EC') | Q(etat_text = 'EA'))\
-	.order_by('-creation_date')
+	.order_by('jalon_date', 'creation_date')
+	listTaches = []
+	for tache in taches:
+		optTache = {
+		'strTache' : str(tache),
+		'titre' : tache.tache_text,
+		'commentaire' : tache.commentaire_text,
+		'creerPar_text' : tache.getCreerPar(),
+		'id' : tache.id,
+		'dateJalon' : tache.jalon_date
+		}
+		listTaches.append(optTache)
 	context = {
-		'taches' : taches,
+		'taches' : listTaches,
 	}
 	return render(request, 'HomeManager/index.html', context)
 
@@ -82,6 +94,9 @@ def createdUser(request):
 
 def updatedTask(request, tache_id):
 	tache = get_object_or_404(Tache, pk=tache_id)
+	dateJalon = request.POST.get('dateJalon', None)
+	if dateJalon:
+		tache.jalon_date = datetime.strptime(dateJalon,'%Y-%m-%d')
 	tache.commentaire_text = request.POST.get('commentaireTache', '')
 	tache.priseEnChargePar_id = request.POST.get('selPriseEnCharge',0)
 	tache.etat_text = request.POST.get('selEtat','EC')
@@ -89,17 +104,18 @@ def updatedTask(request, tache_id):
 	return HttpResponseRedirect(reverse('HomeManager:index'))
 
 def createdTask(request):
-	idUserConnecte = 0
-	userConnected = Personne.objects.filter(username_text=request.user.username)
-	if userConnected.count() > 0:
-		idUserConnecte = userConnected[0].id
+	userConnected = Personne.objects.get(username_text=request.user.username)
 	tache = Tache(
 		tache_text = request.POST.get('titreTache','Aucun titre'),
 		commentaire_text = request.POST.get('commentaireTache', ''),
 		priseEnChargePar_id = request.POST.get('selPriseEnCharge',0),
 		etat_text = 'EC',
 		creation_date = timezone.now(),
-		creerPar_id = idUserConnecte)
+		creerPar_id = userConnected.id,
+	)
+	dateJalon = request.POST.get('dateJalon', None)
+	if dateJalon:
+		tache.jalon_date = datetime.strptime(dateJalon,'%Y-%m-%d')
 	tache.save()
 	return HttpResponseRedirect(reverse('HomeManager:index'))
 
