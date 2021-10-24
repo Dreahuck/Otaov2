@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Tache, Personne
+from .models import Tache, Personne, TypoCrypto, Crypto
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
 from datetime import datetime
+
 
 def authorizedUser(request):
 	if request.method == 'POST':
@@ -124,3 +125,31 @@ def finishTask(request, tache_id):
 	tache.etat_text = "RE"
 	tache.save()
 	return HttpResponseRedirect(reverse('HomeManager:index'))
+
+def ShowCrypto(request):
+	listeCrypto = TypoCrypto.objects.all()
+	cryptos = Crypto.objects.filter(personne__username_text=request.user.username)
+	listCrypto = []
+	for typo_crypto in listeCrypto:
+		quantite = 0
+		if cryptos.filter(code=typo_crypto.code).exists():
+			quantite = cryptos.get(code=typo_crypto.code).quantite
+		crypto = {
+		'code' : typo_crypto.code,
+		'libelle' : typo_crypto.libelle,
+		'quantite' : quantite,
+		}
+		listCrypto.append(crypto)
+	return render(request, 'HomeManager/myCrypto.html', {'cryptos': listCrypto})
+
+def updatedCrypto(request):
+	userConnected = Personne.objects.get(username_text=request.user.username)
+	listeCrypto = TypoCrypto.objects.all()
+	for crypto in listeCrypto:
+		quantite = float(request.POST.get('quantite_' + crypto.code,0))
+		if quantite > 0:
+			crypto = Crypto.objects.update_or_create(
+			code=crypto.code,
+			defaults={'quantite' : quantite,
+			'personne' : userConnected})
+	return HttpResponseRedirect(reverse('HomeManager:myCrypto'))

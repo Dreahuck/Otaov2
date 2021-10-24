@@ -1,0 +1,77 @@
+{% extends "HomeManager/base.html" %}
+{% block content %}
+{% load static %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+        var settings = {
+                "url": "https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cbitcoin&vs_currencies=eur",
+                "method": "GET",
+                "timeout": 0,
+            };
+SimulCrypto = function() {
+    var qtBtc = $("#quantite_BTC").val();
+    var qtEth = $("#quantite_ETH").val();
+    $.ajax(settings).done(function (response) {
+        simQtBtc = qtBtc * response.bitcoin.eur;
+        simEth = qtEth * response.ethereum.eur;
+        total = simQtBtc + simEth;
+        $("#mtBtc").text("Bitcoin : " + simQtBtc.toFixed(3) + "e");
+        $("#mtEth").text("Ethereum : " + simEth.toFixed(3) + "e");
+        $("#mtTotal").text("Portefeuille : " + total.toFixed(3) + " euros");
+    });
+};
+    $(function() {
+            $.ajax(settings).done(function (response) {
+                var total = 0;
+                {% for crypto in cryptos %}
+                    {%if crypto.code == "BTC" %}
+                        var qt = {{crypto.quantite}} * response.bitcoin.eur;
+                        total += qt;
+                        $("#mtBtc").text("Bitcoin : " + qt.toFixed(3) + "e");
+                    {% endif %}
+                    {%if crypto.code == "ETH" %}
+                        var qt = {{crypto.quantite}} * response.ethereum.eur;
+                        total += qt;
+                        $("#mtEth").text("Ethereum : " + qt.toFixed(3) + "e");
+                    {% endif %}
+                {% endfor %}
+                $("#mtTotal").text("Portefeuille : " + total.toFixed(3) + " euros");
+            });
+        });
+</script>
+<div class="container" style="max-width: 70%;">
+    <div class="container">
+    <h2 id="mtTotal"></h2> 
+    <br>
+    <h4 id="mtBtc"> </h4>
+    <h4 id="mtEth"></h4>
+    </div>
+    <br> <br>
+    <div class="container">
+        <h4>Mettre à jour mon portefeuille : </h4>
+    <form action="{% url 'HomeManager:updatedCrypto'%}"
+    method="post">
+    {% csrf_token %}
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    {% for crypto in cryptos %}
+    <div class="form-group row">
+        <label for="quantite_{{crypto.code}}"
+        class="col-sm-2 col-form-label">{{crypto.libelle}}</label>
+        <input id="quantite_{{crypto.code}}" name="quantite_{{crypto.code}}" type="text" class="form-control"
+        aria-label="Quantité" aria-describedby="basic-addon1"
+         value="{{crypto.quantite}}">
+    </div>
+    {% endfor %}
+</div>
+</div>
+</br>
+<div style="text-align:right;">
+<input type="button" value="Simulation" class="btn btn-primary" onclick="SimulCrypto();">
+    <input type="submit" value="Mettre à jour" class="btn btn-success">
+    </div>
+    <br>
+    <input type="button" value="Retour" class="btn btn-secondary"
+    onclick="location.href='{% url 'HomeManager:index' %}'">
+    </form>
+{% endblock %}

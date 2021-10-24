@@ -23,4 +23,8 @@ urlpatterns = [
     path('createdUser/', views.createdUser, name='createdUser'),
 
     path('authorizedUser/', views.authorizedUser, name='authorizedUser'),
+
+    path('myCrypto/', views.ShowCrypto, name='myCrypto'),
+
+    path('updatedCrypto/', views.updatedCrypto, name='updatedCrypto')
 ]

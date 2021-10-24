@@ -46,3 +46,17 @@ class Tache(models.Model):
                 return f'{personne.nom_text} {personne.prenom_text}'
         return "Non renseigné"
 
+
+class Crypto(models.Model):
+    personne = models.ForeignKey(Personne, on_delete=models.CASCADE)
+    code = models.CharField(max_length=3,primary_key = True)
+    quantite = models.DecimalField(default=0, max_digits=10, decimal_places=9)
+    def __str__(self):
+        return self.code
+
+    class Meta:
+        ordering = ['code']
+
+class TypoCrypto(models.Model):
+    code = models.CharField(max_length=3)
+    libelle = models.CharField(max_length=10)
