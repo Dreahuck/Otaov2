@@ -17,3 +17,24 @@ body{
 background: rgb(200,54,73);
 background: linear-gradient(90deg, rgba(200,54,73,1) 0%, rgba(79,138,207,1) 100%);
 }
+
+.centered {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.text-block {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	background-color: black;
+	color: white;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.containerImg {
+	position: relative;
+	text-align: center;
+	color: white;
+  }

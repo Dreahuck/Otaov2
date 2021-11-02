@@ -10,6 +10,7 @@ class Personne(models.Model):
     pourcentageAttribution_int = models.IntegerField(default=100)
     adresseMail_text = models.CharField(max_length=100, default=" ")
     creation_date = models.DateTimeField(default=timezone.now)
+    tchouCoinWallet = models.FloatField(default=0)
     def __str__(self):
         return self.prenom_text + " " + self.nom_text
 
@@ -32,6 +33,7 @@ class Tache(models.Model):
     urgence_bool = models.BooleanField(default=False)
     codeTache_text = models.CharField(max_length=3)
     etat_text = models.CharField(max_length=2, default="EC")
+    tchouCoin = models.FloatField(default=1)
     def __str__(self):
         if self.priseEnChargePar_id > 0:
             personne = Personne.objects.get(pk=self.priseEnChargePar_id)

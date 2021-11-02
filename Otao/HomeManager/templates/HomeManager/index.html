@@ -3,12 +3,18 @@
 {% load static %}
 <div class="container">
     <body>
-        <h2>Bienvenue {{user}} </h2> 
-        <div class="text-center">
+        <div class="container">
+            <h2>Bienvenue {{user}} </h2> 
+            <div style="float:right;">
+                <a style="text-align: right;">{{userConnected.tchouCoinWallet}}
+                    <img src="{% static "HomeManager/media/TchouCoin32.png"%}">
+                </a>
+            </div>
+        </div>
             <!--<img class="img-fluid rounded"
-            src="{% static "HomeManager/media/indexH1.png" %}" alt="Photo de noel">  -->
-<iframe id="widget_autocomplete_preview" frameborder="0" src="https://meteofrance.com/widget/prevision/622740"> </iframe>
-    </div>
+            src="{% static "HomeManager/media/indexH1.png" %}" alt="Photo de noel">
+<iframe id="widget_autocomplete_preview" frameborder="0" src="https://meteofrance.com/widget/prevision/622740"> </iframe> -->
+</div>
         </div>
         <h3>Liste des tâches</h3>
         {% if taches %}

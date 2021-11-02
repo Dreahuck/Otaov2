@@ -1,4 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
+
+from .Metier.tacheManagement import changer_etat_tache
 from .models import Tache, Personne, TypoCrypto, Crypto
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -27,6 +29,7 @@ def authorizedUser(request):
 def index(request):
 	taches = Tache.objects.filter(Q(etat_text = 'EC') | Q(etat_text = 'EA'))\
 	.order_by('jalon_date', 'creation_date')
+	userConnected = Personne.objects.get(username_text=request.user.username)
 	listTaches = []
 	for tache in taches:
 		optTache = {
@@ -40,6 +43,7 @@ def index(request):
 		listTaches.append(optTache)
 	context = {
 		'taches' : listTaches,
+		'userConnected' : userConnected
 	}
 	return render(request, 'HomeManager/index.html', context)
 
@@ -101,7 +105,7 @@ def updatedTask(request, tache_id):
 	tache.commentaire_text = request.POST.get('commentaireTache', '')
 	tache.priseEnChargePar_id = request.POST.get('selPriseEnCharge',0)
 	tache.etat_text = request.POST.get('selEtat','EC')
-	tache.save()
+	changer_etat_tache(tache,request.POST.get('selEtat','EC'), request.user.username)
 	return HttpResponseRedirect(reverse('HomeManager:index'))
 
 def createdTask(request):
@@ -122,8 +126,7 @@ def createdTask(request):
 
 def finishTask(request, tache_id):
 	tache = get_object_or_404(Tache, pk=tache_id)
-	tache.etat_text = "RE"
-	tache.save()
+	changer_etat_tache(tache,"RE", request.user.username)
 	return HttpResponseRedirect(reverse('HomeManager:index'))
 
 def ShowCrypto(request):
