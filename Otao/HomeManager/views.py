@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 
-from .Metier.tacheManagement import changer_etat_tache
-from .models import Tache, Personne, TypoCrypto, Crypto
+from .Metier.tacheManagement import changer_etat_tache,creer_tache_reward
+from .models import Tache, Personne, TypoCrypto, Crypto, Reward
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils import timezone
@@ -27,9 +27,11 @@ def authorizedUser(request):
 
 
 def index(request):
-	taches = Tache.objects.filter(Q(etat_text = 'EC') | Q(etat_text = 'EA'))\
+	taches = Tache.objects.filter(Q(etat_text = 'EC') | Q(etat_text = 'EA') | Q(etat_text = 'RW'))\
 	.order_by('jalon_date', 'creation_date')
-	userConnected = Personne.objects.get(username_text=request.user.username)
+	userConnected = Personne.objects.filter(username_text=request.user.username)
+	if (userConnected.count() < 1): 
+		return connexion(request)
 	listTaches = []
 	for tache in taches:
 		optTache = {
@@ -38,14 +40,40 @@ def index(request):
 		'commentaire' : tache.commentaire_text,
 		'creerPar_text' : tache.getCreerPar(),
 		'id' : tache.id,
-		'dateJalon' : tache.jalon_date
+		'dateJalon' : tache.jalon_date,
+		'etat_text' : tache.etat_text,
+		'priseEnChargePar_id': tache.priseEnChargePar_id
 		}
 		listTaches.append(optTache)
 	context = {
 		'taches' : listTaches,
-		'userConnected' : userConnected
+		'userConnected' : userConnected[0]
 	}
 	return render(request, 'HomeManager/index.html', context)
+
+
+def cryptoRewards(request):
+	userConnected = Personne.objects.get(username_text=request.user.username)
+	rewards = Reward.objects.filter(estActif_bool = True)
+	context = {
+		'rewards' : rewards,
+		'userConnected' : userConnected
+	}
+	return render(request, 'HomeManager/tchouRewards.html', context)
+
+def getReward(request, reward_id):
+	reward = get_object_or_404(Reward, pk=reward_id)
+	userConnected = Personne.objects.get(username_text=request.user.username)
+	if (userConnected.tchouCoinWallet < reward.cout):
+		return render(request, 'HomeManager/tchouRewards.html', 
+		{
+			'error_message_reward': "Votre solde est insuffisant."
+        })
+	else :
+		creer_tache_reward(reward,userConnected)
+		userConnected.tchouCoinWallet -= reward.cout
+		userConnected.save()
+		return HttpResponseRedirect(reverse('HomeManager:index'))
 
 def detail(request, tache_id):
 	tache = None

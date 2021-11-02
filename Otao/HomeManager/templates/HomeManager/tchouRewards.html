@@ -1,0 +1,36 @@
+{% extends "HomeManager/base.html" %}
+{% block content %}
+{% load static %}
+<div class="tchouCoinWallet">
+    <a style="text-align: right;">{{userConnected.tchouCoinWallet}}
+        <img src="{% static "HomeManager/media/TchouCoin32.png"%}">
+    </a>
+</div>
+<div class="container">
+    {% if error_message_reward %}<p class="text-danger"><strong>{{ error_message_reward }}</strong></p>{% endif %}   
+{% if rewards %}
+        <div class="accordion" id="accordionExample">
+            {% for reward in rewards %}
+            <div class="accordion-item background">
+                <h2 class="accordion-header" id="heading{{reward.id}}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{reward.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
+                        {{ reward }}
+                    </button>
+                </h2>
+                <div id="collapse{{reward.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{reward.id}}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <pre>{{ reward.description }}</pre>
+                        <br/>
+                    <input type="button" value="Echanger pour {{reward.cout}} TchouCoin" class="btn btn-primary"
+                    onclick="location.href='{% url 'HomeManager:getReward' reward.id %}'"
+                    {% if userConnected.tchouCoinWallet < reward.cout %} disabled {% endif %}>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucune récompense n'a été paramétré</p>
+        {% endif %}
+        </div>
+</div>
+{% endblock %}

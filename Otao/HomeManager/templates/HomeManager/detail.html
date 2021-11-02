@@ -1,8 +1,10 @@
 {% extends "HomeManager/base.html" %}
 {% block content %}
 {% load static %}
+<div class="container">
 <h1>Détail de la tâche</h1>
-<div class="container" style="max-width: 70%;">
+</div>
+<div class="container" style="max-width: 60%;">
 	{% if tache%}
 		<form action="{% url 'HomeManager:updatedTask' tache.id %}"
 		method="post">

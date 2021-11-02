@@ -62,3 +62,11 @@ class Crypto(models.Model):
 class TypoCrypto(models.Model):
     code = models.CharField(max_length=3)
     libelle = models.CharField(max_length=10)
+
+class Reward(models.Model):
+    cout = models.FloatField(default=999)
+    libelleCourt = models.CharField(max_length=32)
+    description = models.CharField(max_length=500)
+    estActif_bool = models.BooleanField(default=True)
+    def __str__(self) -> str:
+        return f'{self.libelleCourt} ({self.cout} TC)'

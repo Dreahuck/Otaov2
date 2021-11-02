@@ -39,7 +39,7 @@ SimulCrypto = function() {
             });
         });
 </script>
-<div class="container" style="max-width: 70%;">
+<div class="container" style="max-width: 70%; margin-top: 10%;">
     <div class="container">
     <h2 id="mtTotal"></h2> 
     <br>
@@ -66,12 +66,11 @@ SimulCrypto = function() {
 </div>
 </div>
 </br>
-<div style="text-align:right;">
+<div style="position : absolute; right: 0; bottom: 10%;">
 <input type="button" value="Simulation" class="btn btn-primary" onclick="SimulCrypto();">
     <input type="submit" value="Mettre à jour" class="btn btn-success">
-    </div>
-    <br>
     <input type="button" value="Retour" class="btn btn-secondary"
     onclick="location.href='{% url 'HomeManager:index' %}'">
     </form>
+</div>
 {% endblock %}

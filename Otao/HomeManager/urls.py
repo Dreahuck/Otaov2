@@ -26,5 +26,9 @@ urlpatterns = [
 
     path('myCrypto/', views.ShowCrypto, name='myCrypto'),
 
-    path('updatedCrypto/', views.updatedCrypto, name='updatedCrypto')
+    path('updatedCrypto/', views.updatedCrypto, name='updatedCrypto'),
+
+    path('tchouRewards/', views.cryptoRewards, name='tchouRewards'),
+
+    path('<int:reward_id>/getReward/',views.getReward, name="getReward")
 ]

@@ -1,49 +1,69 @@
 {% extends "HomeManager/base.html" %}
 {% block content %}
 {% load static %}
-<div class="container">
-    <body>
-        <div class="container">
-            <h2>Bienvenue {{user}} </h2> 
-            <div style="float:right;">
-                <a style="text-align: right;">{{userConnected.tchouCoinWallet}}
-                    <img src="{% static "HomeManager/media/TchouCoin32.png"%}">
-                </a>
-            </div>
-        </div>
-            <!--<img class="img-fluid rounded"
-            src="{% static "HomeManager/media/indexH1.png" %}" alt="Photo de noel">
-<iframe id="widget_autocomplete_preview" frameborder="0" src="https://meteofrance.com/widget/prevision/622740"> </iframe> -->
+<div class="tchouCoinWallet">
+    <span role="button" onclick="location.href='{% url 'HomeManager:tchouRewards'%}'">
+        <a style="text-align: right;">{{userConnected.tchouCoinWallet}}
+            <img src="{% static "HomeManager/media/TchouCoin32.png"%}">
+        </a>
+    </span>
 </div>
-        </div>
-        <h3>Liste des tâches</h3>
-        {% if taches %}
-        <div class="accordion" id="accordionExample">
-            {% for tache in taches %}
+<div class="container">
+<body>
+            <h2>Bienvenue {{user}} </h2>
+</div>
+{% if taches %}
+<div class="container">
+    <div class="accordion" id="accordionExample">
+        {% for tache in taches %}
+        {% if tache.etat_text != "RW" %}
+        <div class="accordion-item background">
+            <h2 class="accordion-header" id="heading{{tache.id}}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{tache.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
+                    {{ tache.strTache }}
+                </button>
+            </h2>
+            <div id="collapse{{tache.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{tache.id}}"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <strong>Date limite : {{tache.dateJalon|date:"d-m-Y"}}</strong> <br />
+                    <strong>Créée par : {{ tache.creerPar_text }}</strong>
+                    <p class="text-left">{{ tache.commentaire }}</p>
+                    <br />
+                    <input type="button" value="Terminer tache" class="btn btn-secondary"
+                        onclick="location.href='{% url 'HomeManager:finishTask' tache.id %}'">
+                    <input type="button" value="Modifier tache" class="btn btn-primary"
+                        onclick="location.href='{% url 'HomeManager:detail' tache.id %}'">
+                </div>
+            </div>
+            {% else %}
             <div class="accordion-item background">
                 <h2 class="accordion-header" id="heading{{tache.id}}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{tache.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
+                    <button class="accordion-button collapsed bg-warning" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{tache.id}}" aria-expanded="false"
+                        aria-controls="collapse{{tache.id}}">
                         {{ tache.strTache }}
                     </button>
                 </h2>
-                <div id="collapse{{tache.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{tache.id}}" data-bs-parent="#accordionExample">
+                <div id="collapse{{tache.id}}" class="accordion-collapse collapse bg-warning"
+                    aria-labelledby="heading{{tache.id}}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>Date limite :  {{tache.dateJalon|date:"d-m-Y"}}</strong> <br/>
-                        <strong>Créée par : {{ tache.creerPar_text }}</strong>
                         <pre>{{ tache.commentaire }}</pre>
-                        <br/>
-                                <input type="button" value="Terminer tache" class="btn btn-secondary"
-        onclick="location.href='{% url 'HomeManager:finishTask' tache.id %}'">
-                                        <input type="button" value="Modifier tache" class="btn btn-primary"
-        onclick="location.href='{% url 'HomeManager:detail' tache.id %}'">
+                        {% if userConnected.id == tache.priseEnChargePar_id %}
+                        <input type="button" value="Méfait accompli" class="btn btn-primary"
+                            onclick="location.href='{% url 'HomeManager:finishTask' tache.id %}'">
+                        {% endif %}
                     </div>
                 </div>
+                {% endif %}
             </div>
             {% endfor %}
-        {% else %}
+            {% else %}
             <p>Aucune tâche en cours ! Bravo champion &#128540;</p>
-        {% endif %}
+            {% endif %}
         </div>
+    </div>
     </body>
 </div>
 {% endblock %}
