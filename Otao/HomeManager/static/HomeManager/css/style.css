@@ -1,5 +1,6 @@
+{% load staticfiles %}
 .background {
-	background: #8FF2FF;
+	background: #0c0c0c9d;
 /* background: rgb(200,54,73);
 background: linear-gradient(90deg, rgba(200,54,73,1) 0%, rgba(79,138,207,1) 100%); */
 }
@@ -14,19 +15,32 @@ body, html{
 	height:100%;
 }
 
-body{
-	background: #FF8FBA;
+h1,h2,h3,h4 {
+	color:black;
+	text-align: center;
+}
+body {
+	color: #ffffff;
+	background: url("/HomeManager/static/HomeManager/media/TchouCoin512.png") no-repeat center;;
 /* background: rgb(200,54,73);
 background: linear-gradient(90deg, rgba(200,54,73,1) 0%, rgba(79,138,207,1) 100%); */
 }
 
 div.tchouCoinWallet {
 	position:sticky;
+	float: right;
 	top: 0;
-	border: 1px solid #FFD48F;
+	right:0;
+	border: 1px solid #FFD100;
 	border-radius: 8px;
 	padding: 5px;
-	margin: 5px;
+	margin: 2px;
 	text-align: center;
+	width: 30%;
 	background-color: #FFD48F;
   }
+
+.formClass {
+	color:black;
+	padding-top: 25%;
+}

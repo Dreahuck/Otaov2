@@ -1,23 +1,28 @@
 {% extends "HomeManager/base.html" %}
 {% block content %}
 {% load static %}
+<div class="container">
 <div class="tchouCoinWallet">
     <a style="text-align: right;">{{userConnected.tchouCoinWallet}}
         <img src="{% static "HomeManager/media/TchouCoin32.png"%}">
     </a>
 </div>
+<br>
+</div>
+<br>
 <div class="container">
     {% if error_message_reward %}<p class="text-danger"><strong>{{ error_message_reward }}</strong></p>{% endif %}   
 {% if rewards %}
         <div class="accordion" id="accordionExample">
             {% for reward in rewards %}
+            <br>
             <div class="accordion-item background">
                 <h2 class="accordion-header" id="heading{{reward.id}}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{reward.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
+                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{reward.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
                         {{ reward }}
                     </button>
                 </h2>
-                <div id="collapse{{reward.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{reward.id}}" data-bs-parent="#accordionExample">
+                <div id="collapse{{reward.id}}" class="accordion-collapse collapse bg-gradient-info" aria-labelledby="heading{{reward.id}}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <pre>{{ reward.description }}</pre>
                         <br/>

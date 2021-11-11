@@ -54,7 +54,8 @@ def index(request):
 
 def cryptoRewards(request):
 	userConnected = Personne.objects.get(username_text=request.user.username)
-	rewards = Reward.objects.filter(estActif_bool = True)
+	rewards = Reward.objects.filter(estActif_bool = True)\
+	.order_by('cout')
 	context = {
 		'rewards' : rewards,
 		'userConnected' : userConnected

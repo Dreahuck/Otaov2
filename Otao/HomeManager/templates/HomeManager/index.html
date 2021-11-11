@@ -9,17 +9,20 @@
     </span>
 </div>
 <div class="container">
-<body>
+<body> <br>
             <h2>Bienvenue {{user}} </h2>
+    <br>
 </div>
 {% if taches %}
+<br>
 <div class="container">
     <div class="accordion" id="accordionExample">
         {% for tache in taches %}
+        <br>
         {% if tache.etat_text != "RW" %}
         <div class="accordion-item background">
             <h2 class="accordion-header" id="heading{{tache.id}}">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapse{{tache.id}}" aria-expanded="false" aria-controls="collapse{{tache.id}}">
                     {{ tache.strTache }}
                 </button>
@@ -49,7 +52,7 @@
                 <div id="collapse{{tache.id}}" class="accordion-collapse collapse bg-warning"
                     aria-labelledby="heading{{tache.id}}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <pre>{{ tache.commentaire }}</pre>
+                        <p class="text-left">{{ tache.commentaire }}</p>
                         {% if userConnected.id == tache.priseEnChargePar_id %}
                         <input type="button" value="Méfait accompli" class="btn btn-primary"
                             onclick="location.href='{% url 'HomeManager:finishTask' tache.id %}'">
