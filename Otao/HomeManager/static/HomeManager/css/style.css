@@ -21,7 +21,8 @@ h1,h2,h3,h4 {
 }
 body {
 	color: #ffffff;
-	background: url("/HomeManager/static/HomeManager/media/TchouCoin512.png") no-repeat center;;
+	background: url("/HomeManager/static/HomeManager/media/TchouCoin512.png") no-repeat center;
+	background-color: #283977b0;
 /* background: rgb(200,54,73);
 background: linear-gradient(90deg, rgba(200,54,73,1) 0%, rgba(79,138,207,1) 100%); */
 }
